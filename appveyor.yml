@@ -1,0 +1,9 @@
+version: '{build}'
+configuration: Release
+
+clone_depth: 50
+
+build:
+  project: ILBMViewer.sln
+  parallel: true
+  verbosity: minimal

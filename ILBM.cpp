@@ -131,7 +131,7 @@ void CILBM::Decompress( unsigned char * pTarget )
   }
 
   unsigned char * out = pTarget;
-  for (int i=0; i < nDataCompressedSize; i++)
+  for (unsigned int i=0; i < nDataCompressedSize; i++)
   {
     signed char c = (signed char)pDataCompressed[i++];
     if (0 <= c && c <= 127)

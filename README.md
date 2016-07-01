@@ -1,5 +1,6 @@
 ILBMViewer
 ==========
+[![Build status](https://ci.appveyor.com/api/projects/status/5yxbgluk282ski92?svg=true)](https://ci.appveyor.com/project/Gargaj/ilbmviewer)
 
 ILBM (color-cycling image format) viewer for Windows
 

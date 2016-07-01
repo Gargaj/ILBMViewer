@@ -12,8 +12,8 @@
 //#include "resource.h"
 #include <tchar.h>
 
-#pragma comment(lib,"ddraw.lib")
-#pragma comment(lib,"dxguid.lib")
+//#pragma comment(lib,"ddraw.lib")
+//#pragma comment(lib,"dxguid.lib")
 
 czGraphics::czGraphics( int x, int y, bool fs ) {
   CZ_WIDTH = x;
@@ -354,14 +354,28 @@ void czGraphics::Update(void*vscr) {
   mouserelease = 0;
 }
 
+typedef HRESULT(WINAPI * DIRECTDRAWCREATEEX)( GUID*, VOID**, REFIID, IUnknown* );
+DIRECTDRAWCREATEEX _DirectDrawCreateEx = NULL;
+
+#undef DEFINE_GUID
+#define DEFINE_GUID(n,a,b,c,d,e,f,g,h,i,j,k) const GUID n = {a,b,c,{d,e,f,g,h,i,j,k}}
+
+DEFINE_GUID( IID_IDirectDraw7, 0x15e65ec0, 0x3b9c, 0x11d2, 0xb9, 0x2f, 0x00,0x60,0x97,0x97,0xea,0x5b );
+
 int czGraphics::InitDirectDraw( )
 {
   int xres = CZ_WIDTH;
   int yres = CZ_HEIGHT;
 
+  HINSTANCE hDLL = LoadLibrary( _T("DDRAW.DLL") );
+  CZDEBUG_ASSERT_RETURN( hDLL );
+
+  _DirectDrawCreateEx = (DIRECTDRAWCREATEEX)GetProcAddress( hDLL, "DirectDrawCreateEx" );
+  CZDEBUG_ASSERT_RETURN( _DirectDrawCreateEx );
+
   int h;
   //LOG.Printf("[gfx] DirectDrawCreateEx()...\n");
-  h = DirectDrawCreateEx(NULL,(VOID**)&g_pDD, IID_IDirectDraw7, NULL);
+  h = _DirectDrawCreateEx(NULL,(VOID**)&g_pDD, IID_IDirectDraw7, NULL);
   CZDEBUG_ASSERT_RETURN( h == DD_OK );
 
   if (fullscreen) {
