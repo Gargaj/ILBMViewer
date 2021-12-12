@@ -62,6 +62,10 @@ bool CILBM::ReadChunk( HANDLE h )
     return false;
 
   dwSize = FLIPMDWORD(dwSize);
+  if ( dwSize & 1 )
+  {
+    dwSize++;
+  }
   switch(FLIPMDWORD(dwSignature))
   {
     case 'FORM':
@@ -236,6 +240,12 @@ void CILBMViewer::UpdatePalette( unsigned int frame )
 
 void CILBMViewer::PlanarToChunky( unsigned char * pPlanar )
 {
+  if ( sLBMHeader.nPlanes == 8 )
+  {
+    CopyMemory( pChunkyData, pPlanar, sLBMHeader.w * sLBMHeader.h );
+    return;
+  }
+
   ZeroMemory( pChunkyData, sLBMHeader.w * sLBMHeader.h );
   unsigned char * pIn = pPlanar;
   for (int y = 0; y < sLBMHeader.h; y++)
